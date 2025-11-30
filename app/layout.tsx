@@ -1,6 +1,6 @@
-// app/layout.tsx
 import type { ReactNode } from "react";
 import "./globals.css";
+import { MainHeader } from "@/components/layout/MainHeader";
 
 export const metadata = {
   title: "Погода",
@@ -9,23 +9,12 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ru">
-      <body>
-        <div className="app-root">
-          <header className="app-header">
-            <div className="logo">LOGO</div>
-
-            <nav className="main-nav">
-              {/* Use real <Link> from next/link in real project */}
-              <a href="/today">сегодня</a>
-              <a href="/tomorrow">завтра</a>
-              <a href="/week">неделя</a>
-              <a href="/month">месяц</a>
-              
-            
-            </nav>
-          </header>
-
-          <main className="app-main">{children}</main>
+      <body className="min-h-screen">
+        <div className="flex min-h-screen flex-col">
+          <MainHeader />
+          <main className="flex-1">
+            <div className="mx-auto max-w-5xl px-6 py-6">{children}</div>
+          </main>
         </div>
       </body>
     </html>

@@ -1,4 +1,3 @@
-// components/weather/CurrentWeatherCard.tsx
 import type { WeatherData } from "@/types/weather";
 
 interface Props {
@@ -7,10 +6,15 @@ interface Props {
 
 export function CurrentWeatherCard({ weather }: Props) {
   return (
-    <section className="card current-weather-card">
-      <div className="card-title">Сейчас</div>
-      <div className="current-temp">{weather.temperature} °C</div>
-      <div className="current-desc">{weather.description}</div>
-    </section>
+    <div className="space-y-2">
+      <div className="text-xs uppercase tracking-wide text-neutral-400">
+        сейчас
+      </div>
+      <div className="text-5xl font-semibold tracking-tight">
+        {Math.round(weather.temperature)}°C
+      </div>
+      <div className="text-sm text-neutral-200">{weather.description}</div>
+      <div className="text-xs text-neutral-500">{weather.city}</div>
+    </div>
   );
 }

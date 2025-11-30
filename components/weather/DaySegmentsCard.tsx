@@ -1,31 +1,43 @@
-// components/weather/DaySegmentsCard.tsx
 import type { WeatherData } from "@/types/weather";
 
 interface Props {
   weather: WeatherData;
 }
 
+function formatTemp(value: number | null) {
+  if (value === null || Number.isNaN(value)) {
+    return "–";
+  }
+  return `${Math.round(value)}°C`;
+}
+
 export function DaySegmentsCard({ weather }: Props) {
-  const { segments } = weather;
+  const t = weather.segmentTemps;
 
   return (
-    <section className="card day-segments-card">
-      <div className="segment-row">
-        <span>утро</span>
-        <span>{segments.morning}</span>
+    <div className="flex h-full flex-col justify-center gap-4">
+      <div className="flex items-center justify-between text-lg">
+        <span className="text-neutral-400">утро</span>
+        <span className="font-medium text-neutral-50">
+          {formatTemp(t.morning)}
+        </span>
       </div>
-      <div className="segment-row">
-        <span>день</span>
-        <span>{segments.day}</span>
+      <div className="flex items-center justify-between text-lg">
+        <span className="text-neutral-400">день</span>
+        <span className="font-medium text-neutral-50">{formatTemp(t.day)}</span>
       </div>
-      <div className="segment-row">
-        <span>вечер</span>
-        <span>{segments.evening}</span>
+      <div className="flex items-center justify-between text-lg">
+        <span className="text-neutral-400">вечер</span>
+        <span className="font-medium text-neutral-50">
+          {formatTemp(t.evening)}
+        </span>
       </div>
-      <div className="segment-row">
-        <span>ночь</span>
-        <span>{segments.night}</span>
+      <div className="flex items-center justify-between text-lg">
+        <span className="text-neutral-400">ночь</span>
+        <span className="font-medium text-neutral-50">
+          {formatTemp(t.night)}
+        </span>
       </div>
-    </section>
+    </div>
   );
 }
