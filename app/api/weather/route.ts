@@ -27,7 +27,6 @@ function getSegmentByHour(hour: number): DaySegmentKey {
 }
 
 export async function GET() {
-  // Текущая погода
   const currentUrl =
     `${WEATHER_API_URL}?q=${encodeURIComponent(WEATHER_CITY)}` +
     `&appid=${WEATHER_API_KEY}&units=metric&lang=ru`;
@@ -41,7 +40,6 @@ export async function GET() {
 
     const currentRaw = await currentRes.json();
 
-    // Температуры по сегментам: утро/день/вечер/ночь
     const segmentTemps: SegmentTemps = emptySegmentTemps();
 
     try {
@@ -54,7 +52,6 @@ export async function GET() {
       if (forecastRes.ok) {
         const forecastRaw = await forecastRes.json();
 
-        // смещение таймзоны города в секундах
         const tzOffsetSec: number = forecastRaw.city?.timezone ?? 0;
         const tzOffsetMs = tzOffsetSec * 1000;
 
@@ -96,7 +93,6 @@ export async function GET() {
       console.error("Forecast request failed:", err);
     }
 
-    // Солнце (восход/закат + длительность дня) из текущей погоды
     const sunriseTs = currentRaw.sys?.sunrise
       ? Number(currentRaw.sys.sunrise) * 1000
       : undefined;
@@ -129,7 +125,6 @@ export async function GET() {
       dayLengthStr = `${hours} ч ${minutes} мин`;
     }
 
-    //Собираем WeatherData
     const data: WeatherData = {
       city: currentRaw.name,
       temperature: Math.round(currentRaw.main?.temp ?? 0),
@@ -142,7 +137,6 @@ export async function GET() {
       },
     };
 
-    // Лог в Supabase
     await supabaseServer.from("weather_views").insert({
       city: data.city,
       temperature: data.temperature,

@@ -8,22 +8,21 @@ export function SunInfoCard({ weather }: Props) {
   const sun = weather.sun;
 
   return (
-    <div className="space-y-3">
-      <div className="text-xs uppercase tracking-wide text-neutral-400">
-        световой день
-      </div>
-      <div className="space-y-1 text-sm">
-        <div className="flex items-center justify-between">
-          <span className="text-neutral-400">Восход</span>
-          <span className="text-neutral-100">{sun.sunrise}</span>
+    <div className="sun-card">
+      <div className="sun-card__label">световой день</div>
+
+      <div className="sun-card__list">
+        <div className="sun-card__row">
+          <span className="sun-card__row-label">Восход</span>
+          <span className="sun-card__row-value">{sun.sunrise}</span>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-neutral-400">Закат</span>
-          <span className="text-neutral-100">{sun.sunset}</span>
+        <div className="sun-card__row">
+          <span className="sun-card__row-label">Закат</span>
+          <span className="sun-card__row-value">{sun.sunset}</span>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-neutral-400">Длительность</span>
-          <span className="text-neutral-100">{sun.dayLength}</span>
+        <div className="sun-card__row">
+          <span className="sun-card__row-label">Длительность</span>
+          <span className="sun-card__row-value">{sun.dayLength}</span>
         </div>
       </div>
     </div>

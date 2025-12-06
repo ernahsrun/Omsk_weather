@@ -15,28 +15,22 @@ export function DaySegmentsCard({ weather }: Props) {
   const t = weather.segmentTemps;
 
   return (
-    <div className="flex h-full flex-col justify-center gap-4">
-      <div className="flex items-center justify-between text-lg">
-        <span className="text-neutral-400">утро</span>
-        <span className="font-medium text-neutral-50">
-          {formatTemp(t.morning)}
-        </span>
+    <div className="daysegments">
+      <div className="daysegments__row">
+        <span className="daysegments__label">утро</span>
+        <span className="daysegments__value">{formatTemp(t.morning)}</span>
       </div>
-      <div className="flex items-center justify-between text-lg">
-        <span className="text-neutral-400">день</span>
-        <span className="font-medium text-neutral-50">{formatTemp(t.day)}</span>
+      <div className="daysegments__row">
+        <span className="daysegments__label">день</span>
+        <span className="daysegments__value">{formatTemp(t.day)}</span>
       </div>
-      <div className="flex items-center justify-between text-lg">
-        <span className="text-neutral-400">вечер</span>
-        <span className="font-medium text-neutral-50">
-          {formatTemp(t.evening)}
-        </span>
+      <div className="daysegments__row">
+        <span className="daysegments__label">вечер</span>
+        <span className="daysegments__value">{formatTemp(t.evening)}</span>
       </div>
-      <div className="flex items-center justify-between text-lg">
-        <span className="text-neutral-400">ночь</span>
-        <span className="font-medium text-neutral-50">
-          {formatTemp(t.night)}
-        </span>
+      <div className="daysegments__row">
+        <span className="daysegments__label">ночь</span>
+        <span className="daysegments__value">{formatTemp(t.night)}</span>
       </div>
     </div>
   );

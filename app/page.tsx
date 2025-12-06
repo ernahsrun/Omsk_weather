@@ -26,27 +26,25 @@ export default async function HomePage() {
 
   if (!weather) {
     return (
-      <div className="flex justify-center">
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900/70 px-4 py-3 text-sm text-neutral-200">
-          Не удалось загрузить погоду
-        </div>
+      <div className="centered-row">
+        <div className="error-banner">Не удалось загрузить погоду</div>
       </div>
     );
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,1.3fr)]">
-      <div className="flex flex-col gap-4">
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900/70 p-5">
+    <div className="weather-layout">
+      <div className="weather-layout__left">
+        <div className="card">
           <CurrentWeatherCard weather={weather} />
         </div>
 
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900/70 p-5">
+        <div className="card">
           <SunInfoCard weather={weather} />
         </div>
       </div>
 
-      <div className="rounded-2xl border border-neutral-800 bg-neutral-900/70 p-5">
+      <div className="card card--stretch">
         <DaySegmentsCard weather={weather} />
       </div>
     </div>
