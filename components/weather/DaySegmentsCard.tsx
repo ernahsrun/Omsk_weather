@@ -4,15 +4,21 @@ interface Props {
   weather: WeatherData;
 }
 
-function formatTemp(value: number | null) {
-  if (value === null || Number.isNaN(value)) {
+function formatTemp(value: number | null | undefined) {
+  if (value === null || value === undefined || Number.isNaN(value)) {
     return "–";
   }
   return `${Math.round(value)}°C`;
 }
 
 export function DaySegmentsCard({ weather }: Props) {
-  const t = weather.segmentTemps;
+  // Fallback, если segmentTemps вдруг не пришёл
+  const t = weather.segmentTemps ?? {
+    morning: null,
+    day: null,
+    evening: null,
+    night: null,
+  };
 
   return (
     <div className="daysegments">

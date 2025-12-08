@@ -1,6 +1,51 @@
+// app/api/weather/route.ts
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseClient";
 import type { WeatherData, DaySegmentKey } from "@/types/weather";
+
+// Interfaces for OpenWeather responses (minimal, no "any")
+interface OpenWeatherCurrentMain {
+  temp?: number;
+}
+
+interface OpenWeatherCurrentWeather {
+  description?: string;
+}
+
+interface OpenWeatherCurrentSys {
+  sunrise?: number;
+  sunset?: number;
+}
+
+interface OpenWeatherCurrentResponse {
+  name?: string;
+  main?: OpenWeatherCurrentMain;
+  weather?: OpenWeatherCurrentWeather[];
+  sys?: OpenWeatherCurrentSys;
+}
+
+interface OpenWeatherForecastMain {
+  temp?: number;
+}
+
+interface OpenWeatherForecastWeather {
+  description?: string;
+}
+
+interface OpenWeatherForecastItem {
+  dt?: number;
+  main?: OpenWeatherForecastMain;
+  weather?: OpenWeatherForecastWeather[];
+}
+
+interface OpenWeatherForecastCity {
+  timezone?: number;
+}
+
+interface OpenWeatherForecastResponse {
+  city?: OpenWeatherForecastCity;
+  list?: OpenWeatherForecastItem[];
+}
 
 const WEATHER_API_URL = process.env.WEATHER_API_URL!;
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY!;
@@ -32,14 +77,16 @@ export async function GET() {
     `&appid=${WEATHER_API_KEY}&units=metric&lang=ru`;
 
   try {
+    // Fetch current weather
     const currentRes = await fetch(currentUrl, { cache: "no-store" });
 
     if (!currentRes.ok) {
       throw new Error("Weather API error (current)");
     }
 
-    const currentRaw = await currentRes.json();
+    const currentRaw = (await currentRes.json()) as OpenWeatherCurrentResponse;
 
+    // Prepare segment temperatures
     const segmentTemps: SegmentTemps = emptySegmentTemps();
 
     try {
@@ -50,7 +97,8 @@ export async function GET() {
       const forecastRes = await fetch(forecastUrl, { cache: "no-store" });
 
       if (forecastRes.ok) {
-        const forecastRaw = await forecastRes.json();
+        const forecastRaw =
+          (await forecastRes.json()) as OpenWeatherForecastResponse;
 
         const tzOffsetSec: number = forecastRaw.city?.timezone ?? 0;
         const tzOffsetMs = tzOffsetSec * 1000;
@@ -63,8 +111,8 @@ export async function GET() {
         };
 
         for (const item of forecastRaw.list ?? []) {
-          const dtSec: number | undefined = item.dt;
-          const temp: number | undefined = item.main?.temp;
+          const dtSec = item.dt;
+          const temp = item.main?.temp;
           if (typeof dtSec !== "number" || typeof temp !== "number") {
             continue;
           }
@@ -93,11 +141,12 @@ export async function GET() {
       console.error("Forecast request failed:", err);
     }
 
+    // Sun info
     const sunriseTs = currentRaw.sys?.sunrise
-      ? Number(currentRaw.sys.sunrise) * 1000
+      ? currentRaw.sys.sunrise * 1000
       : undefined;
     const sunsetTs = currentRaw.sys?.sunset
-      ? Number(currentRaw.sys.sunset) * 1000
+      ? currentRaw.sys.sunset * 1000
       : undefined;
 
     const sunriseStr =
@@ -126,7 +175,7 @@ export async function GET() {
     }
 
     const data: WeatherData = {
-      city: currentRaw.name,
+      city: currentRaw.name ?? WEATHER_CITY,
       temperature: Math.round(currentRaw.main?.temp ?? 0),
       description: currentRaw.weather?.[0]?.description ?? "",
       segmentTemps,
@@ -137,6 +186,7 @@ export async function GET() {
       },
     };
 
+    // Log to Supabase (can be commented out if not needed)
     await supabaseServer.from("weather_views").insert({
       city: data.city,
       temperature: data.temperature,

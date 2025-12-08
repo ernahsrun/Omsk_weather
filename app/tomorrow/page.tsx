@@ -1,37 +1,38 @@
-// app/page.tsx
+// app/tomorrow/page.tsx
 import type { WeatherData } from "@/types/weather";
 import { CurrentWeatherCard } from "@/components/weather/CurrentWeatherCard";
 import { DaySegmentsCard } from "@/components/weather/DaySegmentsCard";
 import { SunInfoCard } from "@/components/weather/SunInfoCard";
 
-async function getWeather(): Promise<WeatherData> {
-  const res = await fetch("http://localhost:3000/api/weather", {
+async function getTomorrowWeather(): Promise<WeatherData> {
+  const res = await fetch("http://localhost:3000/api/weather-tomorrow", {
     cache: "no-store",
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch weather");
+    throw new Error("Failed to fetch weather for tomorrow");
   }
 
   return res.json();
 }
 
-export default async function HomePage() {
+export default async function TomorrowPage() {
   let weather: WeatherData | null = null;
 
   try {
-    weather = await getWeather();
+    weather = await getTomorrowWeather();
   } catch {
     weather = null;
   }
 
   if (!weather) {
-    return <div>Не удалось загрузить погоду</div>;
+    return <div>Не удалось загрузить погоду на завтра</div>;
   }
 
   return (
     <div className="screen">
-      {/* без заголовка, как на макете */}
+      <h1 className="page-title">Прогноз на завтра</h1>
+
       <div className="weather-grid">
         <div className="card card-now">
           <CurrentWeatherCard weather={weather} />

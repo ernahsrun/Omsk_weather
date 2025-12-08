@@ -1,25 +1,49 @@
+// components/layout/MainHeader.tsx
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function MainHeader() {
-  return (
-    <header className="main-header">
-      <div className="main-header__inner">
-        <div className="main-header__logo">LOGO</div>
+  const pathname = usePathname();
 
-        <nav className="main-header__tabs">
-          <Link href="/" className="main-header__tab main-header__tab--active">
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
+
+  return (
+    <header className="header">
+      <div className="header-inner">
+        <div className="header-logo">ATMOSPHERE+ </div>
+
+        <div className="header-tabs">
+          <Link
+            href="/"
+            className={
+              "header-tab" + (isActive("/") ? " header-tab--active" : "")
+            }
+          >
             сегодня
           </Link>
-          <Link href="/tomorrow" className="main-header__tab">
+          <Link
+            href="/tomorrow"
+            className={
+              "header-tab" +
+              (isActive("/tomorrow") ? " header-tab--active" : "")
+            }
+          >
             завтра
           </Link>
-          <Link href="/week" className="main-header__tab">
+          <Link
+            href="/week"
+            className={
+              "header-tab" + (isActive("/week") ? " header-tab--active" : "")
+            }
+          >
             неделя
           </Link>
-          <Link href="/month" className="main-header__tab">
-            месяц
-          </Link>
-        </nav>
+        </div>
       </div>
     </header>
   );

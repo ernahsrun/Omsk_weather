@@ -7,7 +7,7 @@ interface Props {
 export function CurrentWeatherCard({ weather }: Props) {
   return (
     <div className="current-card">
-      <div className="current-card__label">сейчас</div>
+      <div className="current-card__label">Сейчас</div>
       <div className="current-card__temp">
         {Math.round(weather.temperature)}°C
       </div>
