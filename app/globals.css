@@ -1,26 +1,43 @@
-/* Общий фон и текст — мягкая ночная тема */
+/* ====== Базовые сбросы и фон ====== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
-  padding: 0;
   margin: 0;
+  padding: 0;
   min-height: 100%;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  background: #020617;           /* почти чёрный, но не в ноль */
-  color: #e5e7eb;                /* светло-серый текст */
+  background: #3a3a3a; /* общий серый фон */
+  color: #f5f5f5;
 }
 
-/* Основной layout уже есть, только усилим ощущения ночной темы */
-
+/* Корневой контейнер приложения (если оборачиваешь всё в .app) */
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: #3a3a3a;
 }
 
+/* Ссылки */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ====== Шапка и вкладки ====== */
+
 .header {
-  border-bottom: 1px solid #1f2937;
-  background: #020617;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #33363f; /* чуть темнее, чем фон страницы */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .header-inner {
@@ -33,38 +50,47 @@ body {
 }
 
 .header-logo {
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f5f7fb;
 }
-
-/* табы сверху */
 
 .header-tabs {
   display: inline-flex;
+  align-items: center;
+  padding: 3px;
   border-radius: 999px;
-  background: #020617;
-  border: 1px solid #1f2937;
-  padding: 2px;
+  background: #292c34;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .header-tab {
-  padding: 6px 16px;
-  font-size: 12px;
+  position: relative;
+  padding: 6px 18px;
+  border-radius: 999px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  border-radius: 999px;
-  color: #9ca3af;
+  color: #c3c7d2;
   cursor: pointer;
-  border: none;
-  background: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.header-tab:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
 }
 
 .header-tab--active {
-  background: #0b1530;  /* тёмно-синий “ползунок” под активной вкладкой */
-  color: #e5e7eb;
+  background: #0f1c33;
+  color: #e0e4f2;
+  font-weight: 600;
 }
 
-/* Основной экран и сетка карточек (как на скрине) */
+/* ====== Основной контент ====== */
 
 .app-main {
   flex: 1;
@@ -81,23 +107,43 @@ body {
   padding: 0 24px;
 }
 
+/* Заголовок страницы (например «Прогноз на завтра») */
+.page-title {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* ====== Сетка карточек для сегодня/завтра ====== */
+
 .weather-grid {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
-  grid-auto-rows: auto;
+  grid-template-rows: auto auto;
   gap: 16px;
+  align-items: stretch;
 }
 
+/* Общий вид карточек */
 .card {
-  background: #020617;
+  background: #424551; /* серо-графитовая карточка поверх серого фона */
   border-radius: 18px;
-  border: 1px solid #1f2937;
   padding: 18px 22px;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
 }
 
-/* карточки “сегодня”, “световой день”, “дневные сегменты” */
+/* Центрирование содержимого по вертикали */
+.card-now,
+.card-sun,
+.card-dayparts,
+.card-week {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
+/* Позиционирование карточек в сетке */
 .card-now {
   grid-column: 1;
   grid-row: 1;
@@ -113,62 +159,164 @@ body {
   grid-row: 1 / span 2;
 }
 
-/* ---------- НЕДЕЛЯ ---------- */
+/* ====== Содержимое карточки «Сейчас» ====== */
+
+.now-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #a7aabb;
+  margin-bottom: 6px;
+}
+
+.now-temp {
+  font-size: 46px;
+  line-height: 1;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.now-desc {
+  font-size: 14px;
+  color: #e3e6f0;
+  margin-bottom: 2px;
+}
+
+.now-city {
+  font-size: 12px;
+  color: #a0a4b4;
+}
+
+/* ====== Сегменты дня (утро/день/вечер/ночь) ====== */
+
+.dayparts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dayparts-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.dayparts-label {
+  color: #c3c7d5;
+}
+
+.dayparts-temp {
+  font-weight: 500;
+}
+
+/* ====== Карточка «Световой день» ====== */
+
+.sun-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #a7aabb;
+  margin-bottom: 8px;
+}
+
+.sun-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #dde0eb;
+}
+
+.sun-label {
+  color: #b5b8c8;
+}
+
+/* ====== Карточка «Неделя» в виде таблицы ====== */
 
 .card-week {
   margin-top: 16px;
 }
 
 .week-title {
-  font-size: 14px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #9ca3af;
-  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
 }
 
-/* Не столбик, а сетка карточек, как компактные плитки */
-
+/* «Таблица» на div'ах */
 .week-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
 }
 
 .week-item {
-  background: #020617;
-  border-radius: 14px;
-  border: 1px solid #1f2937;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: table-row;
 }
 
+.week-item > div {
+  display: table-cell;
+  padding: 6px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  vertical-align: middle;
+}
+
+.week-item:first-child > div {
+  border-top: none;
+}
+
+/* Колонки: дата / температура / описание */
 .week-item-date {
+  width: 32%;
   font-size: 13px;
-  text-transform: lowercase;
-  color: #9ca3af;
+  color: #d5d8e6;
 }
 
 .week-item-temps {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
+  width: 30%;
+  font-size: 13px;
   font-weight: 500;
-  color: #e5e7eb;
+  white-space: nowrap;
+}
+
+.week-item-temps span + span {
+  margin-left: 10px;
 }
 
 .week-item-desc {
   font-size: 13px;
-  color: #9ca3af;
+  color: #c0c3d1;
 }
 
-/* немного адаптива под телефон */
+/* ====== Сообщения об ошибках ====== */
 
-@media (max-width: 768px) {
+.error-message {
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #5b3737;
+  color: #ffdede;
+  border: 1px solid #ffb4b4;
+  font-size: 14px;
+}
+
+/* ====== Адаптив под мобильные ====== */
+
+@media (max-width: 900px) {
+  .header-inner {
+    padding-inline: 16px;
+  }
+
+  .screen-inner {
+    padding-inline: 16px;
+  }
+
   .weather-grid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
   }
 
   .card-now,
@@ -178,7 +326,19 @@ body {
     grid-row: auto;
   }
 
-  .screen-inner {
-    padding: 0 16px;
+  .card {
+    padding: 16px 18px;
+  }
+
+  .now-temp {
+    font-size: 38px;
+  }
+
+  .week-item-date {
+    width: 40%;
+  }
+
+  .week-item-temps {
+    width: 35%;
   }
 }

@@ -7,9 +7,9 @@ interface Props {
 export function SunInfoCard({ weather }: Props) {
   // Fallback для случая, когда sun вдруг нет
   const sun = weather.sun ?? {
-    sunrise: "-",
-    sunset: "-",
-    dayLength: "-",
+   sunrise: "-",
+  sunset: "-",
+  dayLength: "-",
   };
 
   return (
